@@ -49,15 +49,51 @@ char*** groupAnagrams(char** strs, int strsSize, int* returnSize, int** returnCo
                 hashTable[numOfUniqueAnagrams][strs[i][j] - 'a']++;
             };
             groupSizeTable[numOfUniqueAnagrams] = 1;
-
-            for (int k = 0; k < 26; k++){
-                printf("%d ", hashTable[numOfUniqueAnagrams][k]);
-            };
-            printf("\n");
-
             numOfUniqueAnagrams++;
         }
     };
+
+    char*** result = malloc(numOfUniqueAnagrams * sizeof(char**));
+    for (int i = 0; i < numOfUniqueAnagrams; i++){
+        result[i] = malloc(groupSizeTable[i] * sizeof(char*));
+    };
+
+    // reset the groupsizetable
+    *returnColumnSizes = malloc(numOfUniqueAnagrams * sizeof(int));
+    for (int i = 0; i < numOfUniqueAnagrams; i++){
+        (*returnColumnSizes)[i] = groupSizeTable[i];
+        groupSizeTable[i] = 0;
+    };
+
+    // now add them into the group
+    for (int i = 0; i < strsSize; i++){
+        int length = strlen(strs[i]);
+        int currentHashTable[26] = {0};
+
+        // put every char into the current hash table
+        for (int j = 0; j < length; j++){
+            currentHashTable[strs[i][j] - 'a']++;
+        };
+
+        int anagramExisted = 0;
+        for (int anagramIndex = 0; anagramIndex < numOfUniqueAnagrams; anagramIndex++){
+            for (int k = 0; k < 26; k++){
+                if (currentHashTable[k] == hashTable[anagramIndex][k] && (k == 25) && !anagramExisted){
+                    anagramExisted = 1;
+                    result[anagramIndex][groupSizeTable[anagramIndex]++] = strs[i];
+                    break;
+                } else if (currentHashTable[k] != hashTable[anagramIndex][k]){
+                    break;
+                }
+            };
+                
+            if (anagramExisted == 1) break;
+        };
+    };
+
+    (*returnSize) = numOfUniqueAnagrams;
+
+    return result;
 }
 
 int main(){
@@ -68,13 +104,13 @@ int main(){
 
     char*** result = groupAnagrams(strs, strsSize, &returnSize, &returnColumnSizes);
     
-    // for (int i = 0; i < returnSize; i++) {
-    //     printf("Group %d (size %d): ", i, returnColumnSizes[i]);
-    //     for (int j = 0; j < returnColumnSizes[i]; j++) {
-    //         printf("\"%s\" ", result[i][j]);
-    //     }
-    //     printf("\n");
-    // }
+    for (int i = 0; i < returnSize; i++) {
+        printf("Group %d (size %d): ", i, returnColumnSizes[i]);
+        for (int j = 0; j < returnColumnSizes[i]; j++) {
+            printf("\"%s\" ", result[i][j]);
+        }
+        printf("\n");
+    }
     
     for (int i = 0; i < returnSize; i++) {
         free(result[i]);
