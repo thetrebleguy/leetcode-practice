@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// UNFINISHED
-
 char*** groupAnagrams(char** strs, int strsSize, int* returnSize, int** returnColumnSizes) {
     int numOfUniqueAnagrams = 0;
     int** hashTable = (int**)malloc(strsSize * sizeof(int*));
