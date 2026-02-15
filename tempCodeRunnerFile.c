@@ -1,3 +1,4 @@
-for (int i = 0; i < strsSize; i++){
-        groupSizeTable[i] = 0;
+
+    for (int i = 0; i <= numOfUniqueElements; i++){
+        printf("%d %d\n", hashTable[i][0], hashTable[i][1]);
     }
