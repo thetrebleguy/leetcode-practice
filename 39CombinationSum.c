@@ -1,31 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// unfinished with many logic flaws for now
-
 void recursion(int** result, int* currentCombination, int* candidates, int candidatesSize, 
                int target, int index, int currentSize, int* returnSize, int** returnColumnSizes, 
                int currentSum) {
     if (currentSum < target){
         // if the current sum is still less than the target, keep searchin downnnn
         // lets search to the left first
-        currentCombination[currentSize] = candidates[index];
-        currentSum += candidates[index];
-
-        // for (int i = 0; i < currentSize; i++) printf("%d ", currentCombination[i]);
-        // printf("\n");
-
-        recursion(result, currentCombination, candidates, candidatesSize, target, index,
-                  currentSize + 1, returnSize, returnColumnSizes, currentSum);
-        
-        // if you can go deeper, then go deeper to the right
         if (index < candidatesSize){
+            currentCombination[currentSize] = candidates[index];
+            currentSum += candidates[index];
+
+            recursion(result, currentCombination, candidates, candidatesSize, target, index,
+                    currentSize + 1, returnSize, returnColumnSizes, currentSum);
+        
+
+        // if you can go deeper, then go deeper to the right
+            currentSum -= candidates[index];
             recursion(result, currentCombination, candidates, candidatesSize, target, index + 1,
                       currentSize, returnSize, returnColumnSizes, currentSum);
         }
     } else if (currentSum == target){
         // if it is the same, then basically just copy the result with the current combination
-        for (int i = 0; i <= currentSize; i++) printf("%d ", currentCombination[i]);
+        for (int i = 0; i < currentSize; i++) printf("%d ", currentCombination[i]);
         printf("\n");
         result[*returnSize] = malloc(currentSize * sizeof(int));
 
@@ -67,9 +64,12 @@ int main(){
         printf("[");
         for (int j = 0; j < returnColumnSize[i]; j++){
             if (i == (returnColumnSize[i] - 1)) printf("[");
+
+            if (j == (returnColumnSize[i] - 1)) printf("%d", result[i][j]);
+            else printf("%d, ", result[i][j]);
         };
         if (i == (returnSize - 1)) printf("]");
-        else printf("] ");
+        else printf("], ");
     }
     printf("]\n");
     return 0;
