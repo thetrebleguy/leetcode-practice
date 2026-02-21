@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// UNFINISHED !
+// FINISHED!
+// 123ms runtime and 8.6mb lol
 
 // lets make a stack
 typedef struct Node{
@@ -12,26 +13,26 @@ typedef struct Node{
 } Node;
 
 Node* createNewNode(char data){
-    Node* newNode = (Node*)malloc(sizeof(Node*));
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node*));
     newNode->value = data;
     newNode->next = NULL;
     return newNode;
 };
 
-Node* appendNewNode(Node* head, Node* tail, char data){
+Node* appendNewNode(Node* head, char data){
     Node* newNode = createNewNode(data);
+    
     if (head == NULL) return newNode;
+    Node* current = head;
+    while (current->next != NULL) current = current->next;
 
-    tail->next = newNode;
-    tail = tail->next;
-    free(newNode);
-    return tail;
+    current->next = newNode;
+    return head;
 };
 
 Node* deleteTail(Node* head){
     if (head == NULL) return NULL;
     if (head->next == NULL){
-        free(head);
         return NULL;
     }
     
@@ -44,45 +45,60 @@ Node* deleteTail(Node* head){
     return head;
 }
 
+Node* checkTail(Node* head, char data){
+    Node* current = head;
+    while (current->next != NULL) current = current->next;
+
+    if (current->value == '(' && data == ')'){
+        head = deleteTail(head);
+    } else if (current->value == '{' && data == '}'){
+        head = deleteTail(head);
+    } else if (current->value == '[' && data == ']'){
+        head = deleteTail(head);
+    } else {
+        head->value = 'f';
+    };
+
+    return head;
+}
+
 void printNodes(Node* head){
+    if (head == NULL) return;
+
     Node* current = head;
     while (current != NULL){
         printf("%c ", current->value);
         current = current->next;
     };
     printf("\n");
+    return;
 }
 
 bool isValid(char* s){
     int lengthOfString = strlen(s);
     Node* head = NULL;
-    Node* tail = NULL;
 
     for (int i = 0; i < lengthOfString; i++){
         if (i == 0){
             if ((s[i] == '(' || s[i] == '{' || s[i] == '[')){
-                head = appendNewNode(head, tail, s[i]);
-                tail = head;
+                head = appendNewNode(head, s[i]);
+            } else {
+                return false;
             }
         } else if (s[i] == '(' || s[i] == '{' || s[i] == '['){ 
             // if the next ones are open brackets, then append
-            tail = appendNewNode(head, tail, s[i]);
+            head = appendNewNode(head, s[i]);
         } else if (s[i] == ')' || s[i] == '}' || s[i] == ']'){
             // check if the tail is the same
-            if (tail->value == '(' && s[i] == ')'){
-                printf("test\n");
-                head = deleteTail(head);
-            } else if (tail->value == '{' && s[i] == '}'){
-                head = deleteTail(head);
-            } else if (tail->value == '[' && s[i] == ']'){
-                head = deleteTail(head);
-            } else {
-                return false;
-            };
+            head = checkTail(head, s[i]);
+            if (head != NULL && head->value == 'f') return false;
         };
-
+        
         printNodes(head);
     };
+
+    if (head != NULL) return false;
+    return true;
 };
 
 int main(){
