@@ -10,10 +10,6 @@ struct ListNode{
     struct ListNode* next;
 };
 
-struct addressCount{
-    struct ListNode* current;
-};
-
 struct ListNode* createNewNode(int val){
     struct ListNode* newNode = (struct ListNode*)malloc(sizeof(struct ListNode*));
     newNode->value = val;
@@ -55,33 +51,18 @@ struct ListNode* addCycle(struct ListNode* head, int pos){
 };
 
 bool hasCycle(struct ListNode *head) {
-    // make a hash table
-    struct addressCount* hashArray[HASH_SIZE] = {NULL};
+    if (head == NULL) return false;
+    // using the floyd's tortoise and hare
+    struct ListNode *slow = head;
+    struct ListNode *fast = head;
 
-    struct ListNode *current = head;
+    while (fast != NULL && fast->next != NULL){
+        fast = fast->next->next;
+        slow = slow->next;
 
-    while (current != NULL){
-        int index = ((unsigned long)current) % 10000; // assigning index with division
-
-        if (hashArray[index] != NULL && hashArray[index]->current == current){
-            return true; // basically found the cycle
-        }
-
-        // if it is empty then you can assign it there
-        if (hashArray[index] == NULL) {
-            hashArray[index] = malloc(sizeof(struct addressCount));
-        }
-        hashArray[index]->current = current;  
-        current = current->next;
+        if (slow == fast) return true;
     };
 
-    // for the cleanup
-    for (int i = 0; i < HASH_SIZE; i++) {
-        if (hashArray[i] != NULL) {
-            free(hashArray[i]);
-        }
-    }
-    
     return false;
 }
 
