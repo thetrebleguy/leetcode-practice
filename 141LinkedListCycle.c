@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define HASH_SIZE 10000
-// TIME LIMIT
-
 struct ListNode{
     int value;
     struct ListNode* next;
