@@ -3,11 +3,10 @@
 
 // i think me know what to do i already drew on paper
 // just gotta try coding it tmrw
-
+// test
 int minEatingSpeed(int* piles, int pilesSize, int h) {
-    // what can i even do lol
-
-};
+    // 
+}
 
 int main(){
     int numOfElements, hours;
