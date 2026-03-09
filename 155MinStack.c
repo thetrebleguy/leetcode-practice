@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// POINTER ISSUE
+// ermmmrmrmrmrmrm
 
-typedef struct {
+typedef struct MinStack {
     int val;
     struct MinStack *next;    
 } MinStack;
 
 MinStack* minStackCreate() {
-    MinStack* newStack = (MinStack*)malloc(sizeof(MinStack*));
+    MinStack* newStack = (MinStack*)malloc(sizeof(MinStack));
     return newStack;
 }
 
@@ -26,7 +26,7 @@ void minStackPush(MinStack* obj, int val) {
 }
 
 void minStackPop(MinStack* obj) {
-    if (obj->next == NULL) return NULL;
+    if (obj->next == NULL) return;
     else {
         MinStack* current = obj;
         obj = current->next;
@@ -62,7 +62,7 @@ int minStackGetMin(MinStack* obj) {
 }
 
 void minStackFree(MinStack* obj) {
-    if (obj->next == NULL) return NULL;
+    if (obj->next == NULL) return;
     else {
         MinStack* current = obj;
 
